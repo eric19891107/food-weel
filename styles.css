@@ -97,3 +97,19 @@ canvas {
     color: #333;
     margin: 5px 0;
 }
+
+.result button {
+    padding: 10px 20px;
+    font-size: 1.2em;
+    cursor: pointer;
+    background-color: #ff9800;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+.result button:hover {
+    background-color: #e68900;
+}

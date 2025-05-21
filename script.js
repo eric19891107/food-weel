@@ -42,6 +42,7 @@ function selectCategory(category) {
     currentOptions = options[category];
     document.getElementById('selection').classList.add('hidden');
     document.getElementById('wheel-container').classList.remove('hidden');
+    document.getElementById('result').classList.add('hidden'); // 隱藏結果卡片
     drawWheel();
 }
 
@@ -84,6 +85,7 @@ function drawWheel() {
 function spinWheel() {
     if (spinning) return;
     spinning = true;
+    document.getElementById('result').classList.add('hidden'); // 轉動前隱藏結果卡片
     const spinAngle = Math.random() * 360 + 720; // 隨機旋轉2-3圈
     let startTime = null;
 
@@ -118,24 +120,39 @@ function showResult() {
     const index = Math.floor((360 - normalizedAngle) / arc) % numOptions;
     const selectedFood = currentOptions[index];
     
-    // 設置結果文字
-    document.getElementById('food-name').textContent = `你今天吃：${selectedFood.name}！`;
-    document.getElementById('food-description').textContent = selectedFood.description;
-    document.getElementById('food-calories').textContent = `熱量：${selectedFood.calories}`;
+    // 清空舊內容
+    const foodName = document.getElementById('food-name');
+    const foodImage = document.getElementById('food-image');
+    const foodDescription = document.getElementById('food-description');
+    const foodCalories = document.getElementById('food-calories');
+    
+    foodName.textContent = '';
+    foodImage.src = '';
+    foodDescription.textContent = '';
+    foodCalories.textContent = '';
+
+    // 設置新內容
+    foodName.textContent = `你今天吃：${selectedFood.name}！`;
+    foodDescription.textContent = selectedFood.description;
+    foodCalories.textContent = `熱量：${selectedFood.calories}`;
 
     // 處理圖片載入
-    const foodImage = document.getElementById('food-image');
-    foodImage.src = ''; // 清空當前 src 避免殞留舊圖片
     foodImage.src = selectedFood.image;
-
-    // 圖片載入成功後顯示結果
     foodImage.onload = () => {
         document.getElementById('result').classList.remove('hidden');
     };
-
-    // 圖片載入失敗時使用備用圖片
     foodImage.onerror = () => {
         foodImage.src = fallbackImage;
         document.getElementById('result').classList.remove('hidden');
     };
+}
+
+// 重置到選擇畫面
+function resetSelection() {
+    currentOptions = [];
+    currentAngle = 0;
+    document.getElementById('wheel-container').classList.add('hidden');
+    document.getElementById('selection').classList.remove('hidden');
+    document.getElementById('result').classList.add('hidden');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
